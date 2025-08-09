@@ -13,6 +13,7 @@ const PlanItemSchema = new mongoose.Schema(
 
 const LearningPlanSchema = new mongoose.Schema(
   {
+    userId: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
     resumeId: { type: mongoose.Schema.Types.ObjectId, ref: 'Resume' },
     role: String,
     items: [PlanItemSchema],

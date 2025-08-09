@@ -32,6 +32,7 @@ const ProjectSchema = new mongoose.Schema(
 
 const ResumeSchema = new mongoose.Schema(
   {
+    userId: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
     name: String,
     email: String,
     phone: String,

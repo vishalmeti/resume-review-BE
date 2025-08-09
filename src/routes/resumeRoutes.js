@@ -2,6 +2,7 @@ const express = require('express');
 const multer = require('multer');
 const router = express.Router();
 const resumeController = require('../controllers/resumeController');
+const { authMiddleware } = require('../middleware/auth');
 
 const storage = multer.memoryStorage();
 const upload = multer({
@@ -15,6 +16,9 @@ const upload = multer({
     cb(null, true);
   }
 });
+
+// All routes require authentication
+router.use(authMiddleware);
 
 // Multer error-safe wrapper to return JSON on upload failures
 router.post('/upload', (req, res, next) => {

@@ -10,7 +10,7 @@ exports.matchResumeToJD = async (req, res) => {
       return res.status(400).json({ error: 'resumeId and non-empty jdText are required' });
     }
     if (!mongoose.Types.ObjectId.isValid(resumeId)) return res.status(400).json({ error: 'Invalid resumeId' });
-    const resume = await Resume.findById(resumeId);
+    const resume = await Resume.findOne({ _id: resumeId, userId: req.user._id });
     if (!resume) return res.status(404).json({ error: 'Resume not found' });
 
     const genai = getGemini();

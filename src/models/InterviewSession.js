@@ -12,6 +12,7 @@ const QAFeedbackSchema = new mongoose.Schema(
 
 const InterviewSessionSchema = new mongoose.Schema(
   {
+    userId: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
     resumeId: { type: mongoose.Schema.Types.ObjectId, ref: 'Resume' },
     role: String,
     questions: [String],

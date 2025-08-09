@@ -9,7 +9,7 @@ exports.startSession = async (req, res) => {
     const { resumeId, role, numQuestions = 5 } = req.body;
     if (!resumeId) return res.status(400).json({ error: 'resumeId is required' });
     if (!mongoose.Types.ObjectId.isValid(resumeId)) return res.status(400).json({ error: 'Invalid resumeId' });
-    const resume = await Resume.findById(resumeId);
+    const resume = await Resume.findOne({ _id: resumeId, userId: req.user._id });
     if (!resume) return res.status(404).json({ error: 'Resume not found' });
 
     const genai = getGemini();
@@ -21,7 +21,7 @@ Resume JSON: ${JSON.stringify(resume.toObject())}\nRole: ${role || ''}`;
     const json = extractFirstJson(text);
     if (!json || !Array.isArray(json.questions)) return res.status(500).json({ error: 'Failed to generate questions' });
 
-    const session = await InterviewSession.create({ resumeId, role, questions: json.questions });
+    const session = await InterviewSession.create({ userId: req.user._id, resumeId, role, questions: json.questions });
     res.json({ sessionId: session._id, questions: json.questions, currentIndex: 0 });
   } catch (err) {
     console.error('startSession error', err);
@@ -33,7 +33,7 @@ exports.answerQuestion = async (req, res) => {
   try {
     const { sessionId } = req.params;
     const { answer } = req.body;
-    const session = await InterviewSession.findById(sessionId);
+    const session = await InterviewSession.findOne({ _id: sessionId, userId: req.user._id });
     if (!session) return res.status(404).json({ error: 'Session not found' });
     if (session.isCompleted) return res.status(400).json({ error: 'Session completed' });
 
@@ -67,7 +67,7 @@ Question: ${question}\nAnswer: ${answer}`;
 exports.getReport = async (req, res) => {
   try {
     const { sessionId } = req.params;
-    const session = await InterviewSession.findById(sessionId);
+    const session = await InterviewSession.findOne({ _id: sessionId, userId: req.user._id });
     if (!session) return res.status(404).json({ error: 'Not found' });
     
     // Aggregate a simple report
@@ -83,7 +83,7 @@ exports.getReport = async (req, res) => {
 exports.listSessions = async (req, res) => {
   try {
     const { resumeId } = req.query;
-    const match = {};
+    const match = { userId: req.user._id };
     if (resumeId) match.resumeId = resumeId;
     const sessions = await InterviewSession.find(match)
       .sort({ createdAt: -1 })
@@ -99,7 +99,7 @@ exports.listSessions = async (req, res) => {
 exports.getSession = async (req, res) => {
   try {
     const { sessionId } = req.params;
-    const session = await InterviewSession.findById(sessionId);
+    const session = await InterviewSession.findOne({ _id: sessionId, userId: req.user._id });
     if (!session) return res.status(404).json({ error: 'Not found' });
     res.json({ session });
   } catch (err) {

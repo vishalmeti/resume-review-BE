@@ -7,6 +7,7 @@ dotenv.config({ path: path.join(__dirname, '..', '.env') });
 
 const connectDb = require('./config/db');
 
+const authRoutes = require('./routes/authRoutes');
 const resumeRoutes = require('./routes/resumeRoutes');
 const jdRoutes = require('./routes/jdRoutes');
 const interviewRoutes = require('./routes/interviewRoutes');
@@ -27,6 +28,7 @@ app.get('/api/health', (_, res) => {
   res.json({ status: 'ok', service: 'resume-review-be' });
 });
 
+app.use('/api/auth', authRoutes);
 app.use('/api/resume', resumeRoutes);
 app.use('/api/jd', jdRoutes);
 app.use('/api/interview', interviewRoutes);

@@ -49,6 +49,7 @@ exports.uploadAndParse = async (req, res) => {
 
     const parsed = await parseResumeWithGemini(rawText);
     const resume = await Resume.create({
+      userId: req.user._id,
       ...parsed,
       rawText,
       filename: req.file?.originalname || null,
@@ -69,7 +70,10 @@ exports.uploadAndParse = async (req, res) => {
 
 exports.getResume = async (req, res) => {
   try {
-    const resume = await Resume.findById(req.params.id);
+    const resume = await Resume.findOne({ 
+      _id: req.params.id, 
+      userId: req.user._id 
+    });
     if (!resume) return res.status(404).json({ error: 'Not found' });
     res.json({ resume });
   } catch (err) {
@@ -79,7 +83,10 @@ exports.getResume = async (req, res) => {
 
 exports.listResumes = async (req, res) => {
   try {
-    const resumes = await Resume.find({}, { rawText: 0 }).sort({ createdAt: -1 }).lean();
+    const resumes = await Resume.find(
+      { userId: req.user._id }, 
+      { rawText: 0 }
+    ).sort({ createdAt: -1 }).lean();
     res.json({ resumes });
   } catch (err) {
     res.status(500).json({ error: 'Server error' });
