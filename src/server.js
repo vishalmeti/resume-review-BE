@@ -8,6 +8,7 @@ dotenv.config({ path: path.join(__dirname, '..', '.env') });
 const connectDb = require('./config/db');
 
 const authRoutes = require('./routes/authRoutes');
+const dashboardRoutes = require('./routes/dashboardRoutes');
 const resumeRoutes = require('./routes/resumeRoutes');
 const jdRoutes = require('./routes/jdRoutes');
 const interviewRoutes = require('./routes/interviewRoutes');
@@ -29,6 +30,7 @@ app.get('/api/health', (_, res) => {
 });
 
 app.use('/api/auth', authRoutes);
+app.use('/api/dashboard', dashboardRoutes);
 app.use('/api/resume', resumeRoutes);
 app.use('/api/jd', jdRoutes);
 app.use('/api/interview', interviewRoutes);
