@@ -13,7 +13,7 @@ exports.startSession = async (req, res) => {
     if (!resume) return res.status(404).json({ error: 'Resume not found' });
 
     const genai = getGemini();
-    const model = genai.getGenerativeModel({ model: 'gemini-1.5-flash' });
+    const model = genai.getGenerativeModel({ model: 'gemini-2.5-flash' });
     const prompt = `Generate ${numQuestions} interview questions tailored to this resume and role. Return JSON as { questions: string[] } and keep questions concise.
 Resume JSON: ${JSON.stringify(resume.toObject())}\nRole: ${role || ''}`;
     const result = await model.generateContent(prompt);
@@ -39,7 +39,7 @@ exports.answerQuestion = async (req, res) => {
 
     const question = session.questions[session.currentIndex];
     const genai = getGemini();
-    const model = genai.getGenerativeModel({ model: 'gemini-1.5-flash' });
+    const model = genai.getGenerativeModel({ model: 'gemini-2.5-flash' });
     const prompt = `You are an interview coach. Given the question and candidate answer, provide feedback and a score 0-100. Return JSON { feedback, score }.
 Question: ${question}\nAnswer: ${answer}`;
     const result = await model.generateContent(prompt);

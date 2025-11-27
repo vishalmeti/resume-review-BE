@@ -13,7 +13,7 @@ exports.generate = async (req, res) => {
     if (!resume) return res.status(404).json({ error: 'Resume not found' });
 
     const genai = getGemini();
-    const model = genai.getGenerativeModel({ model: 'gemini-1.5-flash' });
+    const model = genai.getGenerativeModel({ model: 'gemini-2.5-flash' });
     const prompt = `Create a practical 6-10 week learning plan to close skill gaps for the target role. Return JSON { items: [{ title, description, durationWeeks, resources: string[] }] }.
 Resume JSON: ${JSON.stringify(resume.toObject())}\nRole: ${role || ''}`;
     const result = await model.generateContent(prompt);

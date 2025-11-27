@@ -14,7 +14,7 @@ exports.matchResumeToJD = async (req, res) => {
     if (!resume) return res.status(404).json({ error: 'Resume not found' });
 
     const genai = getGemini();
-    const model = genai.getGenerativeModel({ model: 'gemini-1.5-flash' });
+    const model = genai.getGenerativeModel({ model: 'gemini-2.5-flash' });
     const prompt = `Given the parsed resume JSON and a job description, compute matchPercentage (0-100), matchedSkills (array), missingSkills (array), and a brief summary.
 Return JSON as { matchPercentage, matchedSkills, missingSkills, summary }.
 

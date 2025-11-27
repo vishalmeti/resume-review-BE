@@ -5,7 +5,7 @@ const { getGemini } = require('../config/gemini');
 
 async function parseResumeWithGemini(rawText) {
   const genai = getGemini();
-  const model = genai.getGenerativeModel({ model: 'gemini-1.5-flash' });
+  const model = genai.getGenerativeModel({ model: 'gemini-2.5-flash' });
   const prompt = `You are a resume parser. Given the resume text, extract a clean JSON with fields: name, email, phone, summary, skills (array), experience (array of {company, role, startDate, endDate, bullets}), education (array of {institution, degree, startDate, endDate}), projects (array of {name, description, technologies}).
 Return ONLY JSON, no extra text.
 
